@@ -1,0 +1,9 @@
+* text=auto eol=lf
+*.py text eol=lf
+*.sh text eol=lf
+Pcredz text eol=lf
+*.md text eol=lf
+*.pcap binary
+*.pcapng binary
+*.zip binary
+*.gz binary

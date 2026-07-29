@@ -1,32 +1,10 @@
-# syntax=docker/dockerfile:1
-FROM python:3.11-slim-bookworm
+FROM python:3.12-slim
 
-LABEL maintainer="Laurent Gaffie <lgaffie@secorizon.com>"
-LABEL description="PCredz - Network credential extraction tool"
-
-# Install system dependencies
-RUN apt-get update && apt-get install -y \
-    libpcap-dev \
-    gcc \
-    g++ \
-    git \
+RUN apt-get update && apt-get install -y --no-install-recommends \
+      gcc libpcap-dev \
     && rm -rf /var/lib/apt/lists/*
-
-# Install Python dependencies
-RUN pip3 install --no-cache-dir pcapy-ng
-
-# Create working directory
-WORKDIR /opt/Pcredz
-
-# Copy Pcredz
-COPY Pcredz /opt/Pcredz/Pcredz
-
-# Create logs directory
-RUN mkdir -p /opt/Pcredz/logs
-
-# Make Pcredz executable
-RUN chmod +x /opt/Pcredz/Pcredz
-
-# Set entrypoint
-ENTRYPOINT ["/opt/Pcredz/Pcredz"]
+WORKDIR /opt/pcredz-ultimate
+COPY . .
+RUN pip install --no-cache-dir .[live]
+ENTRYPOINT ["pcredz"]
 CMD ["--help"]

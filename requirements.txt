@@ -1,0 +1,1 @@
+# Offline PCAP/PCAPNG parsing uses only the Python standard library.
