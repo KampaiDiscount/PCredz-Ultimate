@@ -11,7 +11,7 @@ from .capture import live_capture
 from .engine import AuditEngine, capture_files_in_directory
 
 
-VERSION = '3.1.0'
+VERSION = '3.1.1'
 BANNER = r'''
  ____   ____              _        _   _ _ _   _                 _       
 |  _ \ / ___|_ __ ___  __| |____  | | | | | |_(_)_ __ ___   __ _| |_ ___ 

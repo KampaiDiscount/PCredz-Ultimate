@@ -198,7 +198,10 @@ def live_capture(interface: str, snaplen: int = 262144, promisc: bool = True, ti
     try:
         import pcapy  # type: ignore
     except ImportError as exc:
-        raise RuntimeError('Live capture requires pcapy-ng: pip install pcapy-ng') from exc
+        raise RuntimeError(
+            'Live capture backend unavailable. Run ./install.sh --live; on Kali/Debian/Ubuntu '
+            'this installs the compiler, Python headers, libpcap development headers, and pcapy-ng.'
+        ) from exc
 
     reader = pcapy.open_live(interface, snaplen, promisc, timeout_ms)
     linktype = reader.datalink()

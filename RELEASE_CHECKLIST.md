@@ -3,6 +3,7 @@
 ## Code and tests
 
 - [ ] Version updated in `pyproject.toml`, `setup.py`, package metadata, CLI banner, and changelog.
+- [ ] `bash -n install.sh` passes.
 - [ ] `python3 -m compileall -q pcredz_ultimate` passes.
 - [ ] `PYTHONPATH=. python3 -m unittest discover -s tests -v` passes.
 - [ ] Offline install tested in a clean virtual environment.

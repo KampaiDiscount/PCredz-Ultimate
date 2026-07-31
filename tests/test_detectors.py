@@ -99,6 +99,41 @@ class DetectorTests(unittest.TestCase):
             ("mfa_code", "alice", "123456"),
         ])
 
+    def test_http_altoro_uid_passw_form(self) -> None:
+        detector = HTTPDetector(Inventory())
+        body = b"uid=jsmith&passw=WrongButVisible123%21&btnSubmit=Login"
+        request = (
+            b"POST /doLogin HTTP/1.1\r\n"
+            b"Host: demo.testfire.net\r\n"
+            b"Content-Type: application/x-www-form-urlencoded\r\n"
+            + f"Content-Length: {len(body)}\r\n\r\n".encode()
+            + body
+        )
+        findings = list(detector.on_tcp(chunk(80, request)))
+        self.assertEqual(len(findings), 1)
+        self.assertEqual(findings[0].username, "jsmith")
+        self.assertEqual(findings[0].secret, "WrongButVisible123!")
+        self.assertEqual(findings[0].secret_type, "passw")
+
+    def test_line_auth_ignores_http_password_prompt_text(self) -> None:
+        detector = LineAuthDetector()
+        client = Endpoint('10.0.0.2', 50000)
+        server = Endpoint('10.0.0.1', 80)
+        flow = FlowContext(
+            'httpflow', client, server, 80, protocol_hint='http',
+            first_seen=1.0, last_seen=1.0,
+        )
+        response = TCPChunk(
+            1.0, flow, 'resp', server, client,
+            b"HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\nPassword:\n",
+        )
+        request = TCPChunk(
+            1.1, flow, 'orig', client, server,
+            b"GET /images/logo.gif HTTP/1.1\r\nHost: example.test\r\n\r\n",
+        )
+        self.assertEqual(list(detector.on_tcp(response)), [])
+        self.assertEqual(list(detector.on_tcp(request)), [])
+
     def test_http_multiple_set_cookie_headers(self) -> None:
         detector = HTTPDetector(Inventory())
         response = (

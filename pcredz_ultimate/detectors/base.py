@@ -13,7 +13,7 @@ from ..models import Finding, TCPChunk, UDPDatagram
 
 SECRET_KEY_RE = re.compile(
     r'(?i)(?:^|[_\-.])('
-    r'password|passwd|pass|passcode|passphrase|pwd|pin|otp|totp|mfa[_-]?(?:code|token)|'
+    r'password|passwd|passw|pass|passcode|passphrase|pwd|pw|pin|otp|totp|mfa[_-]?(?:code|token)|'
     r'one[_-]?time[_-]?(?:password|passcode|code)|verification[_-]?code|security[_-]?answer|'
     r'secret|client[_-]?secret|'
     r'api[_-]?key|access[_-]?key|access[_-]?token|refresh[_-]?token|id[_-]?token|'

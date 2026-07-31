@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pcredz-ultimate"
-version = "3.1.0"
+version = "3.1.1"
 description = "Passive credential and authentication-material auditing for authorized PCAP and live network captures"
 readme = "README.md"
 requires-python = ">=3.10"
@@ -25,7 +25,7 @@ classifiers = [
 dependencies = []
 
 [project.optional-dependencies]
-live = ["pcapy-ng>=1.0.9"]
+live = ["pcapy-ng>=2.0.0,<3"]
 dev = ["pytest>=8"]
 
 [project.scripts]

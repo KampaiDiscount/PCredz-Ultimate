@@ -40,6 +40,23 @@ class LineAuthDetector(Detector):
 
     def on_tcp(self, chunk: TCPChunk) -> Iterable[Finding]:
         state = self.states[chunk.flow.flow_id]
+
+        # The line-oriented parser is deliberately broad so it can identify mail,
+        # FTP, IRC and Telnet on non-standard ports.  Do not let that heuristic
+        # reinterpret an already identified HTTP/TLS flow as Telnet merely because
+        # an HTML response contains a line such as "Password:".
+        if state.protocol == 'IGNORE' or chunk.flow.protocol_hint in {'http', 'tls'}:
+            state.protocol = 'IGNORE'
+            state.buffers['orig'].clear()
+            state.buffers['resp'].clear()
+            return ()
+
+        if not state.protocol and self._looks_like_http(chunk.data):
+            state.protocol = 'IGNORE'
+            state.buffers['orig'].clear()
+            state.buffers['resp'].clear()
+            return ()
+
         if not state.protocol:
             state.protocol = LINE_PORTS.get(chunk.flow.service_port, '')
         if state.encrypted:
@@ -65,6 +82,17 @@ class LineAuthDetector(Detector):
                 continue
             findings.extend(self._process_line(state, chunk, line))
         return findings
+
+    @staticmethod
+    def _looks_like_http(data: bytes) -> bool:
+        sample = data.lstrip()[:256].upper()
+        if sample.startswith((b'HTTP/', b'RTSP/', b'SIP/')):
+            return True
+        return any(sample.startswith(method + b' ') for method in (
+            b'GET', b'HEAD', b'POST', b'PUT', b'PATCH', b'DELETE',
+            b'OPTIONS', b'CONNECT', b'TRACE', b'PROPFIND', b'PROPPATCH',
+            b'MKCOL', b'COPY', b'MOVE', b'LOCK', b'UNLOCK',
+        ))
 
     @staticmethod
     def _classify(line: str, direction: str) -> str:

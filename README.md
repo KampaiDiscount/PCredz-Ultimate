@@ -1,4 +1,4 @@
-# PCredz Ultimate 3.1.0
+# PCredz Ultimate 3.1.1
 
 PCredz Ultimate is a passive credential, token, challenge-response and network-exposure auditing tool for authorized PCAP/PCAPNG files and explicitly authorized live captures.
 
@@ -43,6 +43,10 @@ Live capture is separately gated:
 ./install.sh --live
 sudo .venv/bin/pcredz -i eth0 --live-authorized -o live-audit
 ```
+
+On Kali, Debian, and Ubuntu, `./install.sh --live` detects and installs missing native prerequisites (`build-essential`, `python3-dev`, `python3-venv`, `pkg-config`, and `libpcap-dev`) before compiling `pcapy-ng` inside `.venv`. Kali's externally managed system Python is not modified. Use `./install.sh --live --no-system-packages` when system package changes must be handled separately. On other distributions, install the equivalent compiler, Python headers, and libpcap development package first.
+
+HTTP form matching is field-name aware and includes common compact aliases such as `uid`, `passw`, `pw`, `pwd`, `passwd`, and `password`. The generic line-oriented protocol detector is isolated from HTTP/TLS flows to prevent HTML labels from generating Telnet false positives.
 
 ## Why the ButterflySA form is detected cleanly
 

@@ -1,5 +1,15 @@
 # Changelog
 
+## 3.1.1
+
+- Fixed `./install.sh --live` on Kali, Debian, and Ubuntu by detecting and installing the required compiler, Python development headers, virtual-environment support, `pkg-config`, and `libpcap-dev` before building `pcapy-ng`.
+- Added explicit checks for `pcap.h` and `Python.h`, followed by a real `pcapy` import and capture-interface discovery validation.
+- Added a `--no-system-packages` mode and clearer guidance for non-apt distributions.
+- Added CI coverage for the exact live installer path on Python 3.13, and constrained the optional backend to `pcapy-ng>=2.0.0,<3`.
+- Improved the runtime error shown when live capture is requested without a working backend.
+- Added support for common compact HTTP password fields such as `passw` and `pw`; this includes the Altoro Mutual/Testfire `uid` + `passw` login form.
+- Prevented the generic line-auth detector from misclassifying HTTP/TLS flows as Telnet when page content contains text such as `Password:`.
+
 ## 3.1.0
 
 - Added context-aware HTTP identity resolution: explicit login identifiers remain preferred, while registration forms now combine first/given and last/family names before falling back to email.
